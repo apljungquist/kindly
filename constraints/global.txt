@@ -1,3 +1,0 @@
-# This project does not really share any version locks with other projects,
-# but we stick a canary in here to make sure we test out the workflow.
-canaria-domestica-red==1.0.1

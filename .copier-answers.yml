@@ -1,7 +1,7 @@
 _src_path: ../protopyp_template/template
 license: mit
 long_name: Kindly
-short_description: A front end for project maintenance tools
+short_description: Context aware curator of workflows
 short_name: kindly
 
 

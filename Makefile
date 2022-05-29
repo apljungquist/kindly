@@ -47,9 +47,8 @@ help: ## Print this help message
 check_all: check_format check_types check_lint check_dist check_docs check_tests ## Run all checks that have not yet passed
 	rm $^
 
-check_format: ## ...
-	isort --check setup.py src/ tests/
-	black --check setup.py src/ tests/
+check_format:
+	kindly check_format
 	touch $@
 
 check_lint: ## ...
@@ -66,7 +65,7 @@ check_docs: ## Check that documentation can be built
 
 # No coverage here to avoid race conditions?
 check_tests: ## Check that unit tests pass
-	pytest --durations=10 --doctest-modules src/kindly tests/
+	kindly check_tests
 	touch $@
 
 check_types: ## ...
@@ -76,10 +75,6 @@ check_types: ## ...
 		--package kindly
 	touch $@
 
-fix_format: ## ...
-	isort setup.py src/ tests/
-	black setup.py src/ tests/
-
 ### Nouns #############################################################################
 # This section contains targets that
 # * Should have no side effects
@@ -87,8 +82,8 @@ fix_format: ## ...
 # * Must not have any prerequisites that are verbs
 # * Ordered first by specificity, second by name
 
-constraints.txt: requirements/build.txt requirements/global.txt $(wildcard requirements/*.txt)
-	pip-compile --allow-unsafe --strip-extras --output-file $@ $^ 2>/dev/null
+constraints.txt: requirements/dev.txt
+	pilecap update
 
 dist/_envoy:
 	$(CLEAN_DIR_TARGET)
@@ -103,17 +98,3 @@ reports/test_coverage/html/index.html: reports/test_coverage/.coverage
 
 reports/test_coverage/coverage.xml: reports/test_coverage/.coverage
 	coverage xml --data-file=$< -o $@
-
-requirements/build.txt: pyproject.toml
-	pilecap build_requirements $< > $@
-
-requirements/global.in: constraints/global.txt requirements/run.txt
-	[ -f $@ ] && rm $@
-	echo "-c ../constraints/global.txt" >> $@
-	echo "-r ../requirements/run.txt" >> $@
-
-requirements/global.txt: requirements/global.in
-	pip-compile --allow-unsafe --output-file $@ $< 2>/dev/null
-
-requirements/run.txt: pyproject.toml
-	pilecap run_requirements $< > $@

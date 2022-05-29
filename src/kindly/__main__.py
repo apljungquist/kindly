@@ -1,5 +1,7 @@
 import sys
 
+from kindly import cli
+
 
 def main() -> None:
-    print(sys.argv)
+    cli.cli(sys.argv[1:])

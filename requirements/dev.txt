@@ -6,8 +6,8 @@ flake8
 isort
 lxml
 mypy[reports]
+pilecap
 pip
-pip-tools >=6.6.2
 pylint
 pytest >=6.2.5
 tox

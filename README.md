@@ -1,7 +1,8 @@
 # Kindly
 
-_A front end for project maintenance tools_
+_Context aware curator of workflows_
 
-
-## Value proposition
-<!-- TODO: Think about what this project should accomplish -->
+General tools, while applicable in more situations, are typically less useful in each.
+Kindly uses two cues to provide shortcuts to tools that are useful right now:
+* python environment
+* working directory

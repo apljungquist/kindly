@@ -20,14 +20,16 @@ disallow_untyped_defs = true
 [tool.pylint.MASTER]
 ignore = ["_version.py"]
 
+[tool.pylint.MISCELLANEOUS]
+notes=["FIXME"]
 
 [tool.pylint.format]
 max-line-length = 88
 
 [tool.pylint.messages_control]
 disable = [
-    "missing-docstring",
     "bad-continuation",  # for black compatibility
+    "missing-docstring",
 ]
 good-names = []
 bad-names=[]
