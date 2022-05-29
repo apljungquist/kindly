@@ -1,0 +1,9 @@
+[run]
+branch = True
+source = kindly,tests
+
+[paths]
+source =
+    src/kindly
+    .tox/*/lib/python*/site-packages/kindly
+

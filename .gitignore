@@ -1,0 +1,15 @@
+/.coverage.*
+/.idea/
+/.tox/
+/build/
+/check_*
+/dist/
+/reports/
+/requirements/build.txt
+/requirements/global.in
+/requirements/global.txt
+/requirements/run.txt
+/src/kindly/_version.py
+/src/*.egg-info/
+/venv/
+__pycache__/
