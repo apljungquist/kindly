@@ -1,0 +1,37 @@
+# pylint: disable=pointless-statement
+# noinspection PyStatementEffect
+{
+    "version": 0,
+    "commands": {
+        "check_format": {
+            "steps": [
+                "isort --check kindly_aliases.pyl src/ tests/",
+                "black --check kindly_aliases.pyl src/ tests/",
+            ],
+        },
+        # The single string that must be `shlex.split` is convenient
+        # but I wonder if there are cases where a list would be more convenient.
+        "check_tests": {
+            "step": [
+                "pytest",
+                "--durations=10",
+                "--doctest-modules",
+                "src/kindly",
+                "tests/",
+            ]
+        },
+        # Override since kindly.pyl should not be in the default rule
+        # Would be nice to figure out a way for workflows to configure the tools they use.
+        "fix_format": {
+            "steps": [
+                "isort kindly_aliases.pyl src/ tests/",
+                "black kindly_aliases.pyl src/ tests/",
+            ],
+        },
+        # Clear example showing overriding
+        "greet": {
+            "help": "A Swedish greeting",
+            "step": "echo Hej",
+        },
+    },
+}

@@ -1,7 +1,8 @@
+import pathlib
 import sys
 
-from kindly import cli
+from kindly import _cli
 
 
 def main() -> None:
-    cli.cli(sys.argv[1:])
+    _cli.cli(pathlib.Path.cwd(), sys.argv[1:])

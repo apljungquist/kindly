@@ -44,7 +44,7 @@ CLEAN_DIR_TARGET = git clean -xdf $(@D); mkdir -p $(@D)
 help: ## Print this help message
 	@python -c "$$PRINT_HELP" < $(MAKEFILE_LIST)
 
-check_all: check_format check_types check_lint check_dist check_docs check_tests ## Run all checks that have not yet passed
+check_all: check_format check_types check_lint check_dist check_docs check_tests make_check_tests_all ## Run all checks that have not yet passed
 	rm $^
 
 check_format:
@@ -64,8 +64,12 @@ check_docs: ## Check that documentation can be built
 	touch $@
 
 # No coverage here to avoid race conditions?
-check_tests: ## Check that unit tests pass
+check_tests: ## Check that unit tests pass in reference environment
 	kindly check_tests
+	touch $@
+
+check_tests_all: ## Check that unit tests pass in all supported environments
+	tox
 	touch $@
 
 check_types: ## ...
