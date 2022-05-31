@@ -1,10 +1,11 @@
 import argparse
+import dataclasses
 import functools
 import logging
 import os
 import pathlib
 import subprocess
-from typing import Callable, List
+from typing import Callable, List, Optional
 
 import pkg_resources
 
@@ -13,12 +14,22 @@ from kindly import api
 logger = logging.getLogger(__name__)
 
 
-def _wrapped(func: Callable[[List[str]], None]) -> Callable[[argparse.Namespace], None]:
-    @functools.wraps(func)
-    def inner(args: argparse.Namespace) -> None:
-        func(args.args)
+@dataclasses.dataclass(frozen=True)
+class _V1Adapter:
+    v1_command: api.V1Command
 
-    return inner
+    @property
+    def name(self) -> str:
+        return self.v1_command.name
+
+    def help(self) -> Optional[str]:
+        return self.v1_command.help
+
+    def configure_parser(self, parser: argparse.ArgumentParser) -> None:
+        parser.add_argument("args", nargs="*")
+
+    def __call__(self, args: argparse.Namespace) -> None:
+        self.v1_command(args.args)
 
 
 def _parser(cwd: pathlib.Path) -> argparse.ArgumentParser:
@@ -35,15 +46,26 @@ def _parser(cwd: pathlib.Path) -> argparse.ArgumentParser:
     for entry_point in pkg_resources.iter_entry_points("kindly.provider"):
         cls = entry_point.load()
         provider: api.Provider = cls(cwd)
-        for command in provider.v1_commands():
+
+        commands = {}
+
+        if hasattr(provider, "v1_commands"):
+            for command in provider.v1_commands():
+                commands[command.name] = _V1Adapter(command)
+
+        if hasattr(provider, "v2_commands"):
+            for command in provider.v2_commands():
+                commands[command.name] = command
+
+        for name, command in sorted(commands.items()):
             command_parser = program_subparsers.add_parser(
-                command.name,
-                help=command.name.capitalize().replace("_", " ")
+                name,
+                help=name.capitalize().replace("_", " ")
                 if command.help is None
                 else command.help,
             )
-            command_parser.add_argument("args", nargs="*")
-            command_parser.set_defaults(func=_wrapped(command))
+            command.configure_parser(command_parser)
+            command_parser.set_defaults(func=command)
 
     return program_parser
 
