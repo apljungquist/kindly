@@ -37,7 +37,3 @@ class Provider(Protocol):
 
     def v1_commands(self) -> Iterable[V1Command]:
         ...
-
-    # It would be nice with a bit more interactivity.
-    # v2 will probably delegate parsing to providers.
-    # v3 will probably delegate parsing and tab completion to providers.
