@@ -1,11 +1,6 @@
 [build-system]
-requires = [
-    # 56 was too low, no package installed for some reason
-    "setuptools>=62",
-    "setuptools_scm[toml]>=6.0"
-]
-build-backend = "setuptools.build_meta"
-
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
 
 
 [tool.isort]
@@ -28,16 +23,50 @@ max-line-length = 88
 
 [tool.pylint.messages_control]
 disable = [
-    "bad-continuation",  # for black compatibility
     "missing-docstring",
 ]
 good-names = []
 bad-names=[]
 
 
-[tool.setuptools_scm]
-write_to = 'src/kindly/_version.py'
+[tool.poetry]
+name = "kindly"
+version = "0.0.0"
+description = "Context aware curator of workflows"
+license = "MIT"
+authors = []
+readme = "README.md"
+homepage = "https://github.com/apljungquist/kindly"
+repository = "https://github.com/apljungquist/kindly"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+setuptools = "^69.0.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.3.0"
+coverage = "^6.4"
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+lxml = "^4.8.0"
+mypy = {extras = ["reports"], version = "^0.950"}
+pip = "^22.1"
+poetry = "^1.7.1"
+pylint = "^2.13.9"
+poetry-dynamic-versioning = "^1.1.1"
+poetry-plugin-export = "^1.6.0"
+pytest = "^7.1.2"
+tox = "^3.25.0"
+types-setuptools = "^57.4.17"
+
+[tool.poetry.plugins."kindly.provider"]
+"aliases" = "kindly._aliases_provider:AliasesProvider"
+"greeting" = "kindly._greeting_provider:GreetingProvider"
+
+[tool.poetry.scripts]
+"kindly" = "kindly.__main__:main"
 
 
-[tool.tox-constraints]
-plugin_enabled = true
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"

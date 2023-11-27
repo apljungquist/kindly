@@ -15,7 +15,6 @@ class GreetingCommand:
 
     def __call__(self, args: List[str]) -> None:
         print(f"Hello {self.subject.capitalize()}!")
-        # pylint: disable=no-self-use
         if args:
             print(f"I see you brought {args[1].capitalize()}.")
         else:

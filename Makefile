@@ -44,7 +44,7 @@ CLEAN_DIR_TARGET = git clean -xdf $(@D); mkdir -p $(@D)
 help: ## Print this help message
 	@python -c "$$PRINT_HELP" < $(MAKEFILE_LIST)
 
-check_all: check_format check_types check_lint check_dist check_docs check_tests make_check_tests_all ## Run all checks that have not yet passed
+check_all: check_format check_types check_lint check_dist check_docs check_tests ## Run all checks that have not yet passed
 	rm $^
 
 check_format:
@@ -52,8 +52,8 @@ check_format:
 	touch $@
 
 check_lint: ## ...
-	pylint setup.py src/ tests/
-	flake8 setup.py src/ tests/
+	pylint src/ tests/
+	flake8 src/ tests/
 	touch $@
 
 # TODO: Consider moving into tox for cases where non-universal wheels are built for more than one target
@@ -79,6 +79,9 @@ check_types: ## ...
 		--package kindly
 	touch $@
 
+sync_env: ## Install dev dependencies into the current environment
+	poetry install --sync
+
 ### Nouns #############################################################################
 # This section contains targets that
 # * Should have no side effects
@@ -86,13 +89,16 @@ check_types: ## ...
 # * Must not have any prerequisites that are verbs
 # * Ordered first by specificity, second by name
 
-constraints.txt: requirements/dev.txt
-	pilecap update
+constraints.txt: poetry.lock
+	poetry export \
+		--format=constraints.txt \
+		--output=$@ \
+		--with dev \
+		--without-hashes
 
 dist/_envoy:
 	$(CLEAN_DIR_TARGET)
-	python -m build --outdir $(@D) .
-	twine check $(@D)/*
+	poetry build
 
 reports/test_coverage/.coverage: $(wildcard .coverage.*)
 	coverage combine --keep --data-file=$@ $^

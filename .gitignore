@@ -6,7 +6,6 @@
 /check_*
 /dist/
 /reports/
-/src/kindly/_version.py
 /src/*.egg-info/
 /venv/
 __pycache__/
