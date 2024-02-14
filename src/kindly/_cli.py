@@ -43,6 +43,7 @@ def _parser(cwd: pathlib.Path) -> argparse.ArgumentParser:
             """
         )
     )
+    # TODO: Fix crash when no arguments are provided and no commands exist
     program_subparsers = program_parser.add_subparsers(required=True)
 
     # TODO: Define strategy for dealing with conflicts
