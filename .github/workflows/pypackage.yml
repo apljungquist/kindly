@@ -20,17 +20,17 @@ jobs:
           pip install -r constraints.txt
           pip install .
       - name: Check format
-        run: make check_format
+        run: kindly check_format
       - name: Check types
-        run: make check_types
+        run: kindly check_types
       - name: Check lint
-        run: make check_lint
+        run: kindly check_lint
       - name: Check docs
-        run: make check_docs
+        run: kindly check_docs
       - name: Check dist
-        run: make check_dist
+        run: kindly check_dist
       - name: Check tests
-        run: make check_tests
+        run: kindly check_tests
       - name: Publish to PyPI
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@master
