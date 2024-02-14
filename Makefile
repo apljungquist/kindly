@@ -1,4 +1,5 @@
-### Config ############################################################################
+# Config
+# ======
 # This section contains various special targets and variables that affect the behavior
 # of make.
 
@@ -9,80 +10,75 @@
 SHELL=/bin/bash
 
 
-### Definitions #######################################################################
+# Definitions
+# ===========
 # This section contains reusable functionality such as
 # * Macros (or _recursively expanded variables_)
 # * Constants (or _simply expanded variables_)
 
-define PRINT_HELP
-import re, sys
-
-targets: dict[str, str] = {
-    match.group("target"): match.group("summary")
-    for match in re.finditer(
-        r"^(?P<target>[a-zA-Z_-]+):.*?## (?P<summary>.*)$$",
-        sys.stdin.read(),
-        re.MULTILINE,
-    )
-}
-max_len = max(map(len, targets))
-for target, summary in targets.items():
-    if summary == "...":
-        summary = target.capitalize().replace("_", " ")
-    print(f"{target:>{max_len}}: {summary}")
-endef
-export PRINT_HELP
-
 CLEAN_DIR_TARGET = git clean -xdf $(@D); mkdir -p $(@D)
 
 
-### Verbs #############################################################################
+## Verbs
+## =====
 # This section contains targets that
 # * May have side effect
 # * Should not have side effects should not affect nouns
 
-help: ## Print this help message
-	@python -c "$$PRINT_HELP" < $(MAKEFILE_LIST)
+## Print this help message
+help:
+	@mkhelp print_docs $(firstword $(MAKEFILE_LIST)) help
 
-check_all: check_format check_types check_lint check_dist check_docs check_tests ## Run all checks that have not yet passed
+## Run all checks that have not yet passed
+check_all: check_format check_types check_lint check_dist check_docs check_tests
 	rm $^
 
+## _
 check_format:
-	kindly check_format
+	isort --check kindly_aliases.pyl src/ tests/
+	black --check kindly_aliases.pyl src/ tests/
 	touch $@
 
-check_lint: ## ...
+## _
+check_lint:
 	pylint src/ tests/
 	flake8 src/ tests/
 	touch $@
 
 # TODO: Consider moving into tox for cases where non-universal wheels are built for more than one target
-check_dist: dist/_envoy; ## Check that distribution can be built and will render correctly on PyPi
+## Check that distribution can be built and will render correctly on PyPi
+check_dist: dist/_envoy;
 	touch $@
 
-check_docs: ## Check that documentation can be built
+## Check that documentation can be built
+check_docs:
 	touch $@
 
 # No coverage here to avoid race conditions?
-check_tests: ## Check that unit tests pass in reference environment
-	kindly check_tests
+## Check that unit tests pass in reference environment
+check_tests:
+	pytest --durations=10 --doctest-modules src/kindly tests/
 	touch $@
 
-check_tests_all: ## Check that unit tests pass in all supported environments
+## Check that unit tests pass in all supported environments
+check_tests_all:
 	tox
 	touch $@
 
-check_types: ## ...
+## _
+check_types:
 	mypy \
 		--cobertura-xml-report=reports/type_coverage/ \
 		--html-report=reports/type_coverage/html/ \
 		--package kindly
 	touch $@
 
-sync_env: ## Install dev dependencies into the current environment
+## Install dev dependencies into the current environment
+sync_env:
 	poetry install --sync
 
-### Nouns #############################################################################
+## Nouns
+## =====
 # This section contains targets that
 # * Should have no side effects
 # * Must have no side effects on other nouns
