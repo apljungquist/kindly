@@ -1,2 +1,0 @@
-# This project does not share any version locks with other projects, but
-# pilecap currently assumes the existence of this file.
