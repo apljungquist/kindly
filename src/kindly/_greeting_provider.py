@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
-import itertools
+import getpass
 import pathlib
 from typing import Any, Iterable, Optional
 
@@ -39,7 +39,4 @@ class GreetingProvider:
         self._cwd = cwd
 
     def v2_commands(self) -> Iterable[GreetingCommand]:
-        for path in itertools.chain([self._cwd], self._cwd.parents):
-            if path.parent.name == "home":
-                yield GreetingCommand("greet", "Say hello", path.name)
-                return
+        yield GreetingCommand("greet", "Say hello", getpass.getuser())
