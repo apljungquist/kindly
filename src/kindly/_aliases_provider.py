@@ -3,19 +3,12 @@ from __future__ import annotations
 
 import ast
 import dataclasses
-import itertools
 import pathlib
 import shlex
 import subprocess
 from typing import Dict, Iterable, List, Optional, Tuple
 
-
-def _find_upwards(start: pathlib.Path, name: str) -> pathlib.Path:
-    for parent in itertools.chain([start], start.parents):
-        path = parent / name
-        if path.exists():
-            return path
-    raise FileNotFoundError
+from kindly import _pathutils
 
 
 @dataclasses.dataclass(frozen=True)
@@ -59,7 +52,9 @@ class AliasesProvider:
 
     def v1_commands(self) -> Iterable[AliasCommand]:
         try:
-            kindly_pyi = _find_upwards(pathlib.Path.cwd(), "kindly_aliases.pyl")
+            kindly_pyi = _pathutils.find_upwards(
+                pathlib.Path.cwd(), "kindly_aliases.pyl"
+            )
         except FileNotFoundError:
             return
 

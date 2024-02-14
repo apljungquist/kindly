@@ -25,7 +25,6 @@ CLEAN_DIR_TARGET = git clean -xdf $(@D); mkdir -p $(@D)
 # * May have side effect
 # * Should not have side effects should not affect nouns
 
-## Print this help message
 help:
 	@mkhelp print_docs $(firstword $(MAKEFILE_LIST)) help
 

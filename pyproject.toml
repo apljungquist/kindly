@@ -43,6 +43,7 @@ repository = "https://github.com/apljungquist/kindly"
 python = "^3.8"
 setuptools = "^69.0.2"
 argcomplete = "^3.1.6"
+mkhelp = "^0.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.3.0"
@@ -64,6 +65,7 @@ types-setuptools = "^57.4.17"
 [tool.poetry.plugins."kindly.provider"]
 "aliases" = "kindly._aliases_provider:AliasesProvider"
 "greeting" = "kindly._greeting_provider:GreetingProvider"
+"makefile" = "kindly._makefile_provider:MakefileProvider"
 
 [tool.poetry.scripts]
 "kindly" = "kindly.__main__:main"
