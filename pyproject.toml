@@ -50,6 +50,7 @@ coverage = "^6.4"
 flake8 = "^4.0.1"
 isort = "^5.10.1"
 lxml = "^4.8.0"
+mkhelp = "^0.2"
 mypy = {extras = ["reports"], version = "^0.950"}
 pip = "^22.1"
 poetry = "^1.7.1"
