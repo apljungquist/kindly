@@ -13,8 +13,18 @@
         },
         # Clear example showing overriding
         "greet": {
-            "help": "A Swedish greeting",
-            "step": "echo Hej",
+            "help": "Say hello",
+            "step": """
+                bash -c "
+                    echo Hello ${USER}!
+                    if [ -z $1 ];
+                    then
+                        echo Are you the brain surgeon?
+                    else
+                        echo I see you brought ${1}.
+                    fi
+                "
+                """,
         },
     },
 }
