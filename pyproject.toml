@@ -63,7 +63,6 @@ types-setuptools = "^57.4.17"
 
 [tool.poetry.plugins."kindly.provider"]
 "aliases" = "kindly._aliases_provider:AliasesProvider"
-"greeting" = "kindly._greeting_provider:GreetingProvider"
 
 [tool.poetry.scripts]
 "kindly" = "kindly.__main__:main"
